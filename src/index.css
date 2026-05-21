@@ -117,3 +117,71 @@
 * {
   font-family: 'Nunito', sans-serif;
 }
+
+@layer base {
+  @layer base {
+    :root {
+      --primary-blue: 217 97% 61%;
+      --primary-green: 102 59% 44%;
+      --primary-red: 0 81% 55%;
+
+      /* Fundo da aplicação (<body>) */
+      --background: 0 0% 3.9%;
+      --foreground: 0 0% 100%;
+
+      /* Fundo do <Card> */
+      --card: 0 0 9%;
+      --card-foreground: 0 0% 100%;
+
+      /* Fundo do <DropdownMenu>, <HoverCard>, <Popover> */
+      --popover: 0 0 9%;
+      --popover-foreground: 0 0% 100%;
+
+      /* Botões */
+      --primary: 102 59% 44%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 240 4% 16%;
+      --secondary-foreground: 0 0% 100%;
+
+      /* Fundo do <Switch>, <Skeleton> e <TabList> */
+      --muted: 240 4% 16%;
+      --muted-foreground: 0 0% 63.9%;
+
+      /* Efeito de hover no <DropdownMenu>, <HoverCard> e <Popover> */
+      --accent: 240 4% 16%;
+      --accent-foreground: 0 0% 100%;
+
+      /* Botões perigosos (deleção, por exemplo) */
+      --destructive: 0 81% 55%;
+      --destructive-foreground: 0 0% 100%;
+
+      /* Borda dos elementos */
+      --border: 240 4% 16%;
+
+      /* Borda dos inputs */
+      --input: 240 4% 16%;
+
+      /* Cor do ring nos inputs */
+      --ring: 0 0% 83.1%;
+
+      /* Border radius para cards, inputs e botões */
+      --radius: 0.5rem;
+
+      /* Gráficos */
+      --chart-1: 220 70% 50%;
+      --chart-2: 160 60% 45%;
+      --chart-3: 30 80% 55%;
+      --chart-4: 280 65% 60%;
+      --chart-5: 340 75% 55%;
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

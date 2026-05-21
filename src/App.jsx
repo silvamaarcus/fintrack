@@ -1,5 +1,12 @@
+import { Button } from './components/ui/button';
+
 const App = () => {
-  return <h1>Hello World</h1>;
+  return (
+    <>
+      <Button>Button</Button>
+      <Button variant="destructive">Teste</Button>
+    </>
+  );
 };
 
 export default App;
