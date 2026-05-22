@@ -66,7 +66,6 @@ const SignupPage = () => {
   });
 
   const handleSubmit = (data) => {
-    // Aqui você pode enviar os dados para o backend ou realizar outras ações necessárias
     console.log('Dados do formulário:', data);
   };
 
