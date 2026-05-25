@@ -134,6 +134,10 @@ const SignupPage = () => {
     });
   };
 
+  if (user) {
+    return <h1 className="text-2xl">Bem-vindo, {user.first_name}!</h1>;
+  }
+
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-center">
       <Form {...methods}>
