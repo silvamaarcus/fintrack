@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { createContext } from 'react';
 import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { toast } from 'sonner';
 
 import api from '@/lib/axios';
@@ -10,6 +11,8 @@ export const AuthContext = createContext({
   login: () => {},
   signup: () => {},
 });
+
+export const useAuthContext = () => useContext(AuthContext); // Custom hook para facilitar o acesso ao contexto de autenticação
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
