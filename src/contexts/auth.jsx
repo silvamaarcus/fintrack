@@ -8,6 +8,7 @@ import api from '@/lib/axios';
 
 export const AuthContext = createContext({
   user: null,
+  isInitializing: true,
   login: () => {},
   signup: () => {},
 });
@@ -18,8 +19,8 @@ const LOCAL_STORAGE_REFRESH_TOKEN_KEY = 'refreshToken';
 const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'accessToken';
 
 const setTokens = (tokens) => {
-  localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY, tokens.accessToken);
-  localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, tokens.refreshToken);
+  localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, tokens.accessToken);
+  localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY, tokens.refreshToken);
 };
 
 const removeTokens = () => {
@@ -28,6 +29,7 @@ const removeTokens = () => {
 };
 
 export const AuthContextProvider = ({ children }) => {
+  const [isInitializing, setIsInitializing] = useState(true);
   const [user, setUser] = useState(null);
 
   //* CADASTRO DE USUÁRIO
@@ -94,6 +96,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
+        setIsInitializing(true); // Indica que a inicialização está em andamento (impede usuário de acessar a aplicação antes de verificar o estado de autenticação)
         const accessToken = localStorage.getItem(
           LOCAL_STORAGE_ACCESS_TOKEN_KEY,
         );
@@ -113,8 +116,11 @@ export const AuthContextProvider = ({ children }) => {
 
         setUser(response.data);
       } catch (error) {
+        setUser(null);
         removeTokens();
         console.error('Erro ao acessar os tokens no localStorage:', error);
+      } finally {
+        setIsInitializing(false); // Indica que a inicialização foi concluída
       }
     };
 
@@ -122,7 +128,14 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: user, login: login, signup: signup }}>
+    <AuthContext.Provider
+      value={{
+        user: user,
+        isInitializing: isInitializing,
+        login: login,
+        signup: signup,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
