@@ -14,6 +14,9 @@ export const AuthContext = createContext({
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  //* CADASTRO DE USUÁRIO
+
+  // Mutation para lidar com o processo de cadastro
   const signupMutation = useMutation({
     mutationKey: ['signup'],
     mutationFn: async (data) => {
@@ -27,6 +30,7 @@ export const AuthContextProvider = ({ children }) => {
     },
   });
 
+  // Função para lidar com o processo de cadastro
   const signup = (data) => {
     signupMutation.mutate(data, {
       onSuccess: (createdUser) => {
@@ -45,6 +49,38 @@ export const AuthContextProvider = ({ children }) => {
     });
   };
 
+  //* LOGIN DE USUÁRIO
+
+  // Mutation para lidar com o processo de login
+  const loginMutation = useMutation({
+    mutationKey: ['login'],
+    mutationFn: async (data) => {
+      const response = await api.post('/users/login', {
+        email: data.email,
+        password: data.password,
+      });
+      return response.data;
+    },
+  });
+
+  // Função para lidar com o processo de login
+  const login = (data) => {
+    loginMutation.mutate(data, {
+      onSuccess: (loggedUser) => {
+        const accessToken = loggedUser.tokens.accessToken;
+        const refreshToken = loggedUser.tokens.refreshToken;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        toast.success('Login realizado com sucesso.');
+        setUser(loggedUser);
+      },
+      onError: () => {
+        toast.success('Erro ao executar login. Por favor, tente novamente.');
+      },
+    });
+  };
+
+  // Persistir o estado de autenticação ao recarregar a página pelo localStorage
   useEffect(() => {
     const init = async () => {
       try {
@@ -73,9 +109,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user: user, login: () => {}, signup: signup }}
-    >
+    <AuthContext.Provider value={{ user: user, login: login, signup: signup }}>
       {children}
     </AuthContext.Provider>
   );
