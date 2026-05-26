@@ -14,6 +14,11 @@ export const AuthContext = createContext({
 
 export const useAuthContext = () => useContext(AuthContext); // Custom hook para facilitar o acesso ao contexto de autenticação
 
+const setTokens = (tokens) => {
+  localStorage.setItem('accessToken', tokens.accessToken);
+  localStorage.setItem('refreshToken', tokens.refreshToken);
+};
+
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
@@ -37,11 +42,8 @@ export const AuthContextProvider = ({ children }) => {
   const signup = (data) => {
     signupMutation.mutate(data, {
       onSuccess: (createdUser) => {
-        const accessToken = createdUser.tokens.accessToken;
-        const refreshToken = createdUser.tokens.refreshToken;
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
         setUser(createdUser);
+        setTokens(createdUser.tokens);
         toast.success('Conta criada com sucesso!');
       },
       onError: () => {
@@ -70,12 +72,9 @@ export const AuthContextProvider = ({ children }) => {
   const login = (data) => {
     loginMutation.mutate(data, {
       onSuccess: (loggedUser) => {
-        const accessToken = loggedUser.tokens.accessToken;
-        const refreshToken = loggedUser.tokens.refreshToken;
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        toast.success('Login realizado com sucesso.');
         setUser(loggedUser);
+        setTokens(loggedUser.tokens);
+        toast.success('Login realizado com sucesso.');
       },
       onError: () => {
         toast.success('Erro ao executar login. Por favor, tente novamente.');
