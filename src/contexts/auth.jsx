@@ -14,9 +14,17 @@ export const AuthContext = createContext({
 
 export const useAuthContext = () => useContext(AuthContext); // Custom hook para facilitar o acesso ao contexto de autenticação
 
+const LOCAL_STORAGE_REFRESH_TOKEN_KEY = 'refreshToken';
+const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'accessToken';
+
 const setTokens = (tokens) => {
-  localStorage.setItem('accessToken', tokens.accessToken);
-  localStorage.setItem('refreshToken', tokens.refreshToken);
+  localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY, tokens.accessToken);
+  localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, tokens.refreshToken);
+};
+
+const removeTokens = () => {
+  localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
+  localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
 };
 
 export const AuthContextProvider = ({ children }) => {
@@ -86,8 +94,12 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
-        const refreshToken = localStorage.getItem('refreshToken');
+        const accessToken = localStorage.getItem(
+          LOCAL_STORAGE_ACCESS_TOKEN_KEY,
+        );
+        const refreshToken = localStorage.getItem(
+          LOCAL_STORAGE_REFRESH_TOKEN_KEY,
+        );
 
         if (!accessToken || !refreshToken) {
           return;
@@ -101,8 +113,7 @@ export const AuthContextProvider = ({ children }) => {
 
         setUser(response.data);
       } catch (error) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        removeTokens();
         console.error('Erro ao acessar os tokens no localStorage:', error);
       }
     };
