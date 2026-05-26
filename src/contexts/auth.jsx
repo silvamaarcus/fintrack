@@ -11,6 +11,7 @@ export const AuthContext = createContext({
   isInitializing: true,
   login: () => {},
   signup: () => {},
+  logout: () => {},
 });
 
 export const useAuthContext = () => useContext(AuthContext); // Custom hook para facilitar o acesso ao contexto de autenticação
@@ -92,6 +93,15 @@ export const AuthContextProvider = ({ children }) => {
     });
   };
 
+  //* LOGOUT DE USUÁRIO
+
+  // Função para lidar com o processo de logout
+  const logout = () => {
+    setUser(null);
+    removeTokens();
+    toast.success('Logout realizado com sucesso.');
+  };
+
   // Persistir o estado de autenticação ao recarregar a página pelo localStorage
   useEffect(() => {
     const init = async () => {
@@ -134,6 +144,7 @@ export const AuthContextProvider = ({ children }) => {
         isInitializing: isInitializing,
         login: login,
         signup: signup,
+        logout: logout,
       }}
     >
       {children}
