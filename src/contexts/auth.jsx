@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { createContext } from 'react';
-import { useEffect, useState } from 'react';
-import { useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -124,7 +122,6 @@ export const AuthContextProvider = ({ children }) => {
         setUser(response.data);
       } catch (error) {
         setUser(null);
-        removeTokens();
         console.error('Erro ao acessar os tokens no localStorage:', error);
       } finally {
         setIsInitializing(false); // Indica que a inicialização foi concluída
