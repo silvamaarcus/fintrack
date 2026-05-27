@@ -97,7 +97,7 @@ const LoginPage = () => {
             </CardFooter>
           </Card>
           <div className="mt-3 flex items-center justify-center">
-            <p className="text-sm text-muted-foreground">Já tem uma conta?</p>
+            <p className="text-sm text-muted-foreground">Não tem uma conta?</p>
             <Button variant="link" asChild>
               <Link to="/signup">Criar agora</Link>
             </Button>
