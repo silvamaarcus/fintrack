@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { toast } from 'sonner';
 
+import {
+  LOCAL_STORAGE_ACCESS_TOKEN_KEY,
+  LOCAL_STORAGE_REFRESH_TOKEN_KEY,
+} from '@/constants/local-storage';
 import api from '@/lib/axios';
 
 export const AuthContext = createContext({
@@ -15,9 +19,6 @@ export const AuthContext = createContext({
 });
 
 export const useAuthContext = () => useContext(AuthContext); // Custom hook para facilitar o acesso ao contexto de autenticação
-
-const LOCAL_STORAGE_REFRESH_TOKEN_KEY = 'refreshToken';
-const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'accessToken';
 
 const setTokens = (tokens) => {
   localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, tokens.accessToken);
@@ -118,11 +119,7 @@ export const AuthContextProvider = ({ children }) => {
           return;
         }
 
-        const response = await api.get('/users/me', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await api.get('/users/me');
 
         setUser(response.data);
       } catch (error) {
