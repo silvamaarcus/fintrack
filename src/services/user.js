@@ -1,6 +1,6 @@
-import { publicApi } from '@/lib/axios';
+import { protectedApi, publicApi } from '@/lib/axios';
 
-// Função para lidar com as requisições como: cadastro, login, refresh token, etc.
+// Função para lidar com as requisições como: cadastro, login, me (dados do usuário logado)
 export const UserService = {
   signup: async (input) => {
     const response = await publicApi.post('/users', {
@@ -17,6 +17,11 @@ export const UserService = {
       email: input.email,
       password: input.password,
     });
+    return response.data;
+  },
+
+  me: async () => {
+    const response = await protectedApi.get('/users/me');
     return response.data;
   },
 };
