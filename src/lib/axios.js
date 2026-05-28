@@ -24,7 +24,7 @@ protectedApi.interceptors.request.use((request) => {
 });
 
 protectedApi.interceptors.response.use(
-  (response) => response,
+  (response) => response, // Se a resposta for bem-sucedida, apenas retorna a resposta
   async (error) => {
     const request = error.config;
 
