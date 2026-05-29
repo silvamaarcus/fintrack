@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useSearchParams } from 'react-router';
 
+import { useAuthContext } from '@/contexts/auth';
 import { formatCurrency } from '@/helpers/currency';
 import { UserService } from '@/services/user';
 
@@ -16,6 +17,7 @@ const Balance = () => {
   const [searchParams] = useSearchParams();
   const from = searchParams.get('from');
   const to = searchParams.get('to');
+  const { user } = useAuthContext();
 
   const {
     data: totalBalance = {
@@ -25,7 +27,7 @@ const Balance = () => {
       investments: 0,
     },
   } = useQuery({
-    queryKey: ['balance', from, to],
+    queryKey: ['balance', user, from, to], // user é add p/ garatir que query seja refeita ao deslogar/logar
     queryFn: () => UserService.balance({ from, to }),
     enabled: !!from && !!to,
   });
