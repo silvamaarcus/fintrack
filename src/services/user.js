@@ -72,4 +72,35 @@ export const UserService = {
       email: response.data.email,
     };
   },
+
+  /**
+   * Obter o balanço financeiro do usuário autenticado para um período específico
+   * @param {string} from - Data de início do período (formato: 'yyyy-MM-dd')
+   * @param {string} to - Data de fim do período (formato: 'yyyy-MM-dd')
+   * @returns {Object} Balanço financeiro do usuário para o período especificado
+   * @returns {string} earnings - Total de ganhos no período
+   * @returns {string} expenses - Total de despesas no período
+   * @returns {string} investments - Total de investimentos no período
+   * @returns {string} earningsPercentage - Percentual de ganhos em relação ao total
+   * @returns {string} expensesPercentage - Percentual de despesas em relação ao total
+   * @returns {string} investmentsPercentage - Percentual de investimentos em relação ao total
+   * @returns {string} balance - Balanço   *
+   * Observação: Os valores retornados são convertidos para Number para garantir que sejam tratados como números no frontend (ex: para formatação e cálculos)
+   */
+  balance: async ({ from, to }) => {
+    if (!from || !to) return;
+
+    const response = await protectedApi.get(
+      `/users/me/balance?from=${from}&to=${to}`,
+    );
+    return {
+      earnings: Number(response.data.earnings),
+      expenses: Number(response.data.expenses),
+      investments: Number(response.data.investments),
+      earningsPercentage: Number(response.data.earningsPercentage),
+      expensesPercentage: Number(response.data.expensesPercentage),
+      investmentsPercentage: Number(response.data.investmentsPercentage),
+      balance: Number(response.data.balance),
+    };
+  },
 };

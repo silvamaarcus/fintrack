@@ -9,7 +9,7 @@ const formatDateToQueryParam = (date) => {
 };
 
 const DateSelection = () => {
-  const [searchParams] = new useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [date, setDate] = useState({

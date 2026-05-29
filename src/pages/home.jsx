@@ -6,6 +6,8 @@ import HeaderComponent from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/contexts/auth';
 
+import Balance from '../components/balance';
+
 const HomePage = () => {
   const { user, isInitializing } = useAuthContext();
 
@@ -18,7 +20,8 @@ const HomePage = () => {
   return (
     <>
       <HeaderComponent />
-      <div className="p-8">
+      <div className="space-y-6 p-8">
+        {/* TITULO, FILTRO E BOTÃO DE NOVA TRANSAÇÃO */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Dashboard</h2>
 
@@ -30,6 +33,8 @@ const HomePage = () => {
             </Button>
           </div>
         </div>
+        {/* CARDS DE BALANCE, RECEITAS E DESPESAS */}
+        <Balance />
       </div>
     </>
   );
