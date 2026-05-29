@@ -1,7 +1,7 @@
 import TransactionTypeIcon from './transaction-type-icon';
 import { Card, CardContent } from './ui/card';
 
-const BalanceItem = ({ label, icon, amount = 'R$ 2.700,00' }) => {
+const BalanceItem = ({ label, icon, amount }) => {
   return (
     <>
       <Card>
