@@ -28,7 +28,7 @@ import {
 import { Input } from './ui/input';
 
 const addTransactionSchema = z.object({
-  title: z.string().trim().min(1, { message: 'O nome é obrigatório' }),
+  name: z.string().trim().min(1, { message: 'O nome é obrigatório' }),
   amount: z.number({ required_error: 'O valor é obrigatório' }),
   date: z.date({ required_error: 'A data é obrigatória' }),
   type: z.enum(['EARNING', 'EXPENSE', 'INVESTMENT'], {
@@ -40,7 +40,7 @@ const AddTransactionButton = () => {
   const methods = useForm({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
-      title: '',
+      name: '',
       amount: 0,
       date: new Date(),
       type: 'EARNING',
@@ -70,16 +70,16 @@ const AddTransactionButton = () => {
                   Insira as informações abaixo
                 </DialogDescription>
               </DialogHeader>
-              {/* TÍTULO */}
+              {/* NOME */}
               <FormField
                 control={methods.control}
-                name="title"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Título</FormLabel>
+                    <FormLabel>Nome</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Digite o título da transação"
+                        placeholder="Digite o nome da transação"
                         {...field}
                       />
                     </FormControl>
