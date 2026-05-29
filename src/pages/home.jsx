@@ -33,8 +33,10 @@ const HomePage = () => {
             </Button>
           </div>
         </div>
-        {/* CARDS DE BALANCE, RECEITAS E DESPESAS */}
-        <Balance />
+        {/* CARDS DE BALANCE E GRÁFICO */}
+        <div className="grid-cols-[2fr, 1fr] grid">
+          <Balance />
+        </div>
       </div>
     </>
   );
