@@ -1,9 +1,8 @@
-import { PlusIcon } from 'lucide-react';
 import { Navigate } from 'react-router';
 
+import AddTransactionButton from '@/components/add-transaction-button';
 import DateSelection from '@/components/date-selection';
 import HeaderComponent from '@/components/header';
-import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/contexts/auth';
 
 import Balance from '../components/balance';
@@ -27,10 +26,7 @@ const HomePage = () => {
 
           <div className="flex items-center gap-2">
             <DateSelection />
-            <Button>
-              <PlusIcon className="mr-2" />
-              Nova transação
-            </Button>
+            <AddTransactionButton />
           </div>
         </div>
         {/* CARDS DE BALANCE E GRÁFICO */}
