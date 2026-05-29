@@ -34,7 +34,7 @@ const HeaderComponent = () => {
           </div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button variant="outline">
                 <Avatar className="mr-2 h-8 w-8">
                   <AvatarImage src="https://github.com/shadcn.png" />
