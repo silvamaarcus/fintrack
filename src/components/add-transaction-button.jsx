@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Loader2Icon,
   PiggyBank,
@@ -7,12 +6,9 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
 import { toast } from 'sonner';
-import z from 'zod';
 
-import { useCreateTransaction } from '@/api/hooks';
 import {
   Dialog,
   DialogClose,
@@ -23,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useCreateTransactionForm } from '@/forms/hooks/transaction/use-create-transaction-form';
 
 import { Button } from './ui/button';
 import { DatePicker } from './ui/date-picker';
@@ -36,41 +33,20 @@ import {
 } from './ui/form';
 import { Input } from './ui/input';
 
-const addTransactionSchema = z.object({
-  name: z.string().trim().min(1, { message: 'O nome é obrigatório' }),
-  amount: z.number({ required_error: 'O valor é obrigatório' }),
-  date: z.date({ required_error: 'A data é obrigatória' }),
-  type: z.enum(['EARNING', 'EXPENSE', 'INVESTMENT'], {
-    errorMap: () => ({ message: 'O tipo de transação é obrigatório' }),
-  }),
-});
-
 const AddTransactionButton = () => {
-  // mutateAsync é usado para lidar com a criação da transação de forma assíncrona
-  const { mutateAsync: createMutation, isPending } = useCreateTransaction();
-
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
-  const methods = useForm({
-    resolver: zodResolver(addTransactionSchema),
-    defaultValues: {
-      name: '',
-      amount: 0,
-      date: new Date(),
-      type: 'EARNING',
-    },
-    shouldUnregister: true, // Garante que os campos sejam limpos ao fechar o dialog
-  });
-
-  const onSubmit = async (data) => {
-    try {
-      await createMutation(data);
-      toast.success('Transação adicionada com sucesso!');
+  const { form, onSubmit, isPending } = useCreateTransactionForm({
+    onSuccess: () => {
       setDialogIsOpen(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      toast.success('Transação criada com sucesso!');
+    },
+    onError: () => {
+      toast.error(
+        'Ocorreu um erro ao criar a transação. Por favor, tente novamente.',
+      );
+    },
+  });
 
   return (
     <>
@@ -81,8 +57,8 @@ const AddTransactionButton = () => {
             Nova transação
           </Button>
         </DialogTrigger>
-        <Form {...methods}>
-          <form className="space-y-8" onSubmit={methods.handleSubmit(onSubmit)}>
+        <Form {...form}>
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <DialogContent>
               <DialogHeader className="!text-center">
                 <DialogTitle>Adicionar Transação</DialogTitle>
@@ -92,7 +68,7 @@ const AddTransactionButton = () => {
               </DialogHeader>
               {/* NOME */}
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
@@ -109,7 +85,7 @@ const AddTransactionButton = () => {
               />
               {/* VALOR */}
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
@@ -135,7 +111,7 @@ const AddTransactionButton = () => {
               />
               {/* DATA */}
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="date"
                 render={({ field }) => (
                   <FormItem>
@@ -152,7 +128,7 @@ const AddTransactionButton = () => {
               />
               {/* TIPO */}
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="type"
                 render={({ field }) => (
                   <FormItem>
@@ -211,7 +187,7 @@ const AddTransactionButton = () => {
                 <Button
                   type="submit"
                   className="w-full"
-                  onClick={() => methods.handleSubmit(onSubmit)()}
+                  onClick={() => form.handleSubmit(onSubmit)()}
                   disabled={isPending}
                 >
                   {isPending ? (
