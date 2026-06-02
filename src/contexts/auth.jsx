@@ -1,7 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+import { useLogin, useSignup } from '@/api/hooks';
 import { UserService } from '@/api/services/user';
 import {
   LOCAL_STORAGE_ACCESS_TOKEN_KEY,
@@ -32,16 +32,10 @@ export const AuthContextProvider = ({ children }) => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [user, setUser] = useState(null);
 
-  //* CADASTRO DE USUÁRIO
-
   // Mutation para lidar com o processo de cadastro
-  const signupMutation = useMutation({
-    mutationKey: ['signup'],
-    mutationFn: async (data) => {
-      const response = await UserService.signup(data);
-      return response;
-    },
-  });
+  const signupMutation = useSignup();
+  // Mutation para lidar com o processo de login
+  const loginMutation = useLogin();
 
   // Função para lidar com o processo de cadastro
   const signup = (data) => {
@@ -59,17 +53,6 @@ export const AuthContextProvider = ({ children }) => {
     });
   };
 
-  //* LOGIN DE USUÁRIO
-
-  // Mutation para lidar com o processo de login
-  const loginMutation = useMutation({
-    mutationKey: ['login'],
-    mutationFn: async (data) => {
-      const response = await UserService.login(data);
-      return response;
-    },
-  });
-
   // Função para lidar com o processo de login
   const login = (data) => {
     loginMutation.mutate(data, {
@@ -83,8 +66,6 @@ export const AuthContextProvider = ({ children }) => {
       },
     });
   };
-
-  //* LOGOUT DE USUÁRIO
 
   // Função para lidar com o processo de logout
   const logout = () => {

@@ -13,7 +13,7 @@ import { NumericFormat } from 'react-number-format';
 import { toast } from 'sonner';
 import z from 'zod';
 
-import { getUserBalanceQueryKey } from '@/api/hooks/user';
+import { getUserBalanceQueryKey } from '@/api/hooks';
 import { TransactionService } from '@/api/services/transaction';
 import {
   Dialog,

@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { useSearchParams } from 'react-router';
 
-import { useGetUserBalance } from '@/api/hooks/user';
+import { useGetUserBalance } from '@/api/hooks';
 import { formatCurrency } from '@/helpers/currency';
 
 import BalanceItem from './balance-item';
