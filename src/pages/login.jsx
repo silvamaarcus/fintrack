@@ -74,7 +74,12 @@ const LoginPage = () => {
               />
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Fazer login</Button>
+              <Button
+                className="w-full"
+                disabled={methods.formState.isSubmitting}
+              >
+                {methods.formState.isSubmitting ? 'Entrando...' : 'Entrar'}
+              </Button>
             </CardFooter>
           </Card>
           <div className="mt-3 flex items-center justify-center">
