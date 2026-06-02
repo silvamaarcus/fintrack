@@ -29,6 +29,7 @@ const Balance = () => {
   } = useQuery({
     queryKey: ['balance', user.id, from, to], // user.id é add p/ garatir que query seja refeita ao deslogar/logar
     queryFn: () => UserService.balance({ from, to }),
+    staleTime: 1000 * 60 * 5, // Refaz a query a cada 5 minutos
     enabled: !!from && !!to,
   });
 
