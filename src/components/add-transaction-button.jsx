@@ -1,7 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PiggyBank, PlusIcon, TrendingDown, TrendingUp } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  Loader2Icon,
+  PiggyBank,
+  PlusIcon,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
+import { toast } from 'sonner';
 import z from 'zod';
 
 import {
@@ -14,6 +23,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useAuthContext } from '@/contexts/auth';
+import { TransactionService } from '@/services/transaction';
 
 import { Button } from './ui/button';
 import { DatePicker } from './ui/date-picker';
@@ -37,6 +48,20 @@ const addTransactionSchema = z.object({
 });
 
 const AddTransactionButton = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuthContext();
+  // mutateAsync é usado para lidar com a criação da transação de forma assíncrona
+  const { mutateAsync: createMutation, isPending } = useMutation({
+    mutationKey: ['createTransaction'],
+    mutationFn: async (input) => TransactionService.create(input),
+    // Invalida a query de transações para refetch automático e atualiza saldo após criação de nova transação p/ usuário logado
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['balance', user.id] });
+    },
+  });
+
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+
   const methods = useForm({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
@@ -48,13 +73,19 @@ const AddTransactionButton = () => {
     shouldUnregister: true, // Garante que os campos sejam limpos ao fechar o dialog
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      await createMutation(data);
+      toast.success('Transação adicionada com sucesso!');
+      setDialogIsOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <>
-      <Dialog className="w-[400px]">
+      <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
         <DialogTrigger asChild>
           <Button>
             <PlusIcon />
@@ -192,8 +223,16 @@ const AddTransactionButton = () => {
                   type="submit"
                   className="w-full"
                   onClick={() => methods.handleSubmit(onSubmit)()}
+                  disabled={isPending}
                 >
-                  Adicionar
+                  {isPending ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2Icon className="animate-spin" />
+                      Adicionando...
+                    </div>
+                  ) : (
+                    'Adicionar'
+                  )}
                 </Button>
               </DialogFooter>
             </DialogContent>

@@ -27,7 +27,7 @@ const Balance = () => {
       investments: 0,
     },
   } = useQuery({
-    queryKey: ['balance', user, from, to], // user é add p/ garatir que query seja refeita ao deslogar/logar
+    queryKey: ['balance', user.id, from, to], // user.id é add p/ garatir que query seja refeita ao deslogar/logar
     queryFn: () => UserService.balance({ from, to }),
     enabled: !!from && !!to,
   });
