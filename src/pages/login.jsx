@@ -1,7 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router';
-import { z } from 'zod';
 
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
@@ -23,28 +20,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useAuthContext } from '@/contexts/auth';
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .email({ message: 'O e-mail deve ser válido' })
-    .trim()
-    .min(1, { message: 'O e-mail é obrigatório' }),
-  password: z.string().trim().min(6, {
-    message: 'A senha é obrigatória.',
-  }),
-});
+import { useLoginForm } from '@/forms/hooks';
 
 const LoginPage = () => {
   const { user, login, isInitializing } = useAuthContext();
 
-  const methods = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+  const methods = useLoginForm();
 
   const handleSubmit = (data) => login(data);
 
