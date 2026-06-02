@@ -34,19 +34,17 @@ const DateSelection = () => {
     const queryParams = new URLSearchParams();
     queryParams.set('from', formatDateToQueryParam(date.from));
     queryParams.set('to', formatDateToQueryParam(date.to));
-    navigate(`/?${queryParams.toString()}`, { replace: true });
-    queryClient.invalidateQueries({
-      queryKey: ['balance', user.id], // Invalida a query de balance para que os dados sejam refetchados com as novas datas
-    });
 
-    if (date.from && date.to) {
-      navigate(
-        {
-          search: queryParams.toString(),
-        },
-        { replace: true },
-      );
-    }
+    navigate(`/?${queryParams.toString()}`);
+
+    queryClient.invalidateQueries({
+      queryKey: [
+        'balance',
+        user.id,
+        formatDateToQueryParam(date.from),
+        formatDateToQueryParam(date.to),
+      ],
+    });
   }, [navigate, date, queryClient, user.id]);
 
   return <DatePickerWithRange value={date} onChange={setDate} />;
