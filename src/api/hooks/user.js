@@ -4,6 +4,10 @@ import { UserService } from '@/api/services/user';
 import { useAuthContext } from '@/contexts/auth';
 
 export const getUserBalanceQueryKey = ({ userId, from, to }) => {
+  if (!from || !to) {
+    return ['balance', userId]; // Retorna uma chave mais genérica se as datas não estiverem disponíveis, mas ainda inclui o userId para garantir que a query seja refeita ao deslogar/logar
+  }
+  // Retorna datas disponiveis
   return [
     'balance', // Chave base para a query de balance
     userId, // Add o ID do usuário p/ garantir que a query seja refeita ao deslogar/logar
