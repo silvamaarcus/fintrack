@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Loader2Icon,
   PiggyBank,
@@ -13,8 +12,7 @@ import { NumericFormat } from 'react-number-format';
 import { toast } from 'sonner';
 import z from 'zod';
 
-import { getUserBalanceQueryKey } from '@/api/hooks';
-import { TransactionService } from '@/api/services/transaction';
+import { useCreateTransaction } from '@/api/hooks';
 import {
   Dialog,
   DialogClose,
@@ -25,7 +23,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useAuthContext } from '@/contexts/auth';
 
 import { Button } from './ui/button';
 import { DatePicker } from './ui/date-picker';
@@ -49,19 +46,8 @@ const addTransactionSchema = z.object({
 });
 
 const AddTransactionButton = () => {
-  const queryClient = useQueryClient();
-  const { user } = useAuthContext();
   // mutateAsync é usado para lidar com a criação da transação de forma assíncrona
-  const { mutateAsync: createMutation, isPending } = useMutation({
-    mutationKey: ['createTransaction'],
-    mutationFn: async (input) => TransactionService.create(input),
-    // Invalida a query de transações para refetch automático e atualiza saldo após criação de nova transação p/ usuário logado
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: getUserBalanceQueryKey({ userId: user.id }),
-      });
-    },
-  });
+  const { mutateAsync: createMutation, isPending } = useCreateTransaction();
 
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
