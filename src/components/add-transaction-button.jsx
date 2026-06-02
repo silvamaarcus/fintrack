@@ -13,6 +13,8 @@ import { NumericFormat } from 'react-number-format';
 import { toast } from 'sonner';
 import z from 'zod';
 
+import { getUserBalanceQueryKey } from '@/api/hooks/user';
+import { TransactionService } from '@/api/services/transaction';
 import {
   Dialog,
   DialogClose,
@@ -24,7 +26,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useAuthContext } from '@/contexts/auth';
-import { TransactionService } from '@/services/transaction';
 
 import { Button } from './ui/button';
 import { DatePicker } from './ui/date-picker';
@@ -56,7 +57,9 @@ const AddTransactionButton = () => {
     mutationFn: async (input) => TransactionService.create(input),
     // Invalida a query de transações para refetch automático e atualiza saldo após criação de nova transação p/ usuário logado
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['balance', user.id] });
+      queryClient.invalidateQueries({
+        queryKey: getUserBalanceQueryKey({ userId: user.id }),
+      });
     },
   });
 
