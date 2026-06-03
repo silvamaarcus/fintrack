@@ -1,3 +1,5 @@
+import queryString from 'query-string';
+
 import { protectedApi } from '@/lib/axios';
 
 //* Service Layer para lidar com as requisições relacionadas as transações (criação, listagem, etc)
@@ -26,5 +28,21 @@ export const TransactionService = {
       date: new Date(response.data.date), // Converte a string de volta para objeto Date
       type: response.data.type,
     };
+  },
+
+  /**
+   * Retorna todas as transações do usuário autenticado
+   * @param {Object} input - Filtros para a listagem de transações
+   * @param {Date} input.from - Data inicial para filtrar as transações
+   * @param {Date} input.to - Data final para filtrar as transações
+   * @returns {Array} Lista de transações do usuário dentro do período especificado
+   */
+  getAll: async (input) => {
+    const query = queryString.stringify({
+      from: input?.from,
+      to: input?.to,
+    });
+    const response = await protectedApi.get(`/transactions/me?${query}`);
+    return response.data;
   },
 };
