@@ -8,3 +8,8 @@ export const createTransactionFormSchema = z.object({
     errorMap: () => ({ message: 'O tipo de transação é obrigatório' }),
   }),
 });
+
+// Usa o schema de criação como base e adiciona o campo 'id' para edição.
+export const editTransactionFormSchema = createTransactionFormSchema.extend({
+  id: z.string.uuid()({ required_error: 'O ID da transação é obrigatório' }),
+});
