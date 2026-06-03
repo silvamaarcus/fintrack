@@ -45,4 +45,31 @@ export const TransactionService = {
     const response = await protectedApi.get(`/transactions/me?${query}`);
     return response.data;
   },
+
+  /**
+   * Atualiza uma transação existente do usuário autenticado
+   * @param {Object} input - Dados para atualizar a transação
+   * @param {string} input.id - ID da transação a ser atualizada
+   * @param {string} input.name - Novo título da transação
+   * @param {number} input.amount - Novo valor da transação
+   * @param {Date} input.date - Nova data da transação
+   * @param {string} input.type - Novo tipo da transação (EARNING, EXPENSE ou INVESTMENT)
+   * @returns {Object} Dados da transação atualizada
+   */
+  update: async (input) => {
+    const response = await protectedApi.patch(`/transactions/me/${input.id}`, {
+      name: input.name,
+      amount: input.amount,
+      date: input.date.toISOString(), // Converte a data para string no formato ISO antes de enviar
+      type: input.type,
+    });
+    return {
+      id: response.data.id,
+      userId: response.data.user_id,
+      name: response.data.name,
+      amount: response.data.amount,
+      date: new Date(response.data.date), // Converte a string de volta para objeto Date
+      type: response.data.type,
+    };
+  },
 };
