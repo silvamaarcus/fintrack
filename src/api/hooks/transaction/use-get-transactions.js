@@ -21,6 +21,7 @@ export const useGetTransactions = ({ from, to }) => {
   const { user } = useAuthContext();
   return useQuery({
     queryKey: getGetTransactionsQueryKey({ userId: user.id, from, to }),
-    queryFn: TransactionService.getAll({ from, to }),
+    queryFn: () => TransactionService.getAll({ from, to }),
+    enabled: Boolean(from) && Boolean(to) && Boolean(user.id), // A query só será executada se as datas 'from' e 'to' estiverem disponíveis e o user.id estiver disponível, garantindo que não tentemos buscar transações sem um período definido ou sem um usuário autenticado
   });
 };
