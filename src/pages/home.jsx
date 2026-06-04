@@ -19,7 +19,7 @@ const HomePage = () => {
   }
 
   return (
-    <>
+    <main>
       <HeaderComponent />
       <div className="space-y-6 p-8">
         {/* PARTE DO TOPO */}
@@ -40,7 +40,7 @@ const HomePage = () => {
         {/* TABELA DE TRANSACOES */}
         <TransactionsTable />
       </div>
-    </>
+    </main>
   );
 };
 
