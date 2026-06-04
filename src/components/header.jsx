@@ -37,7 +37,10 @@ const HeaderComponent = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
                 <Avatar className="mr-2 h-8 w-8">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt={`Perfil de ${user.firstName[0]}`}
+                  />
                   <AvatarFallback>
                     {user.firstName[0]}
                     {user.lastName[0]}
